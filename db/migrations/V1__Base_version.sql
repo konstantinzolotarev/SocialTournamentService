@@ -125,7 +125,7 @@ ALTER SEQUENCE "Backers_id_seq" OWNED BY "Backers".id;
 
 CREATE TABLE "Players" (
     id bigint NOT NULL,
-    "playerName" text NOT NULL,
+    "playerName" text NOT NULL UNIQUE, 
     points numeric(10,2) NOT NULL
 );
 
@@ -332,9 +332,6 @@ SELECT pg_catalog.setval('"Backers_id_seq"', 1, false);
 -- Dependencies: 188
 -- Data for Name: Players; Type: TABLE DATA; Schema: game; Owner: GameRole
 --
-
-INSERT INTO "Players" (id, "playerName", points) VALUES (1, 'test', 10.20);
-
 
 --
 -- TOC entry 2189 (class 0 OID 0)
