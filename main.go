@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"database/sql"
-	_ "github.com/lib/pq"
 	"os"
 	"log"
+	"context"
+	"SocialTournamentService/models"
 )
 
 type Config struct {
@@ -16,10 +16,23 @@ type Config struct {
 	DbName string
 }
 
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
+type ContextHandler interface {
+	ServeHTTPContext(context.Context, http.ResponseWriter, *http.Request)
+}
+
+type ContextHandlerFunc func(context.Context, http.ResponseWriter, *http.Request)
+
+func (h ContextHandlerFunc) ServeHTTPContext(ctx context.Context, rw http.ResponseWriter, req *http.Request) {
+	h(ctx, rw, req)
+}
+
+type ContextAdapter struct {
+	ctx     context.Context
+	handler ContextHandler
+}
+
+func (ca *ContextAdapter) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	ca.handler.ServeHTTPContext(ca.ctx, rw, req)
 }
 
 func main() {
@@ -36,11 +49,15 @@ func main() {
 
 	dbInfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
 		configuration.DbUser, configuration.DbPassword, configuration.DbName)
-	db, err := sql.Open("postgres", dbInfo)
-	checkErr(err)
-	defer db.Close()
+	db, err := models.ConnectToDB(dbInfo)
+	if err != nil {
+		panic(err)
+	}
 
-	http.HandleFunc("/take", take)
+	ctx := context.WithValue(context.Background(), "db", db)
+
+	http.Handle("/take", &ContextAdapter{ctx, ContextHandlerFunc(take)})
+	//http.HandleFunc("/take", take)
 	http.HandleFunc("/fund", fund)
 	http.HandleFunc("/announceTournament", announceTournament)
 	http.HandleFunc("/balance", balance)
@@ -48,7 +65,8 @@ func main() {
 	http.ListenAndServe(":8081", nil)
 }
 
-func take(w http.ResponseWriter, r *http.Request) {
+func take(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	models.PrintPlayers(ctx)
 	fmt.Println("Get query params: ", r.URL.Query())
 	b, err := json.Marshal("Hello client")
 	if err != nil {
@@ -56,6 +74,7 @@ func take(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(b)
+
 }
 
 func fund(w http.ResponseWriter, r *http.Request) {
