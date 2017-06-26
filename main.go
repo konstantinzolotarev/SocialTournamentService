@@ -68,13 +68,31 @@ func main() {
 func take(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	models.PrintPlayers(ctx)
 	fmt.Println("Get query params: ", r.URL.Query())
-	b, err := json.Marshal("Hello client")
-	if err != nil {
-		panic(err)
+
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
 	}
 
-	w.Write(b)
+	if len(r.URL.Query()) != 2 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
+	playerId := r.URL.Query().Get("playerId")
+	points := r.URL.Query().Get("points")
+	if len(playerId) == 0 || len(points) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := models.Take(ctx, playerId, points)
+	if err != nil {
+		println(err.Error())
+
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func fund(w http.ResponseWriter, r *http.Request) {

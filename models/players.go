@@ -13,6 +13,21 @@ type Player struct {
 	points float64
 }
 
+func Take(ctx context.Context, playerName string, points string) (error) {
+	db, ok := ctx.Value("db").(*sql.DB)
+	if !ok {
+		return errors.New("models: could not get database connection pool from context")
+	}
+
+	_, err := db.Exec("INSERT INTO game.\"Players\" (\"playerName\", \"points\") " +
+		"VALUES ($1, $2) ON CONFLICT (\"playerName\") DO UPDATE SET points = excluded.points;", playerName, points)
+	if err != nil {
+		return errors.New("models: could not write Players to database")
+	}
+
+	return nil
+}
+
 func PrintPlayers(ctx context.Context) (error) {
 	db, ok := ctx.Value("db").(*sql.DB)
 	if !ok {
