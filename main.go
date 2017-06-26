@@ -57,7 +57,6 @@ func main() {
 	ctx := context.WithValue(context.Background(), "db", db)
 
 	http.Handle("/take", &ContextAdapter{ctx, ContextHandlerFunc(take)})
-	//http.HandleFunc("/take", take)
 	http.HandleFunc("/fund", fund)
 	http.HandleFunc("/announceTournament", announceTournament)
 	http.HandleFunc("/balance", balance)
@@ -89,7 +88,6 @@ func take(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	err := models.Take(ctx, playerId, points)
 	if err != nil {
 		println(err.Error())
-
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
