@@ -5,12 +5,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"encoding/json"
 )
 
 type Player struct {
-	Id int64
-	playerName string
-	points float64
+	id int64
+	PlayerName string `json:"playerName"`
+	Points float64    `json:"balance"`
 }
 
 func Take(ctx context.Context, playerName string, points string) (error) {
@@ -43,7 +44,7 @@ func PrintPlayers(ctx context.Context) (error) {
 	players := make([]*Player, 0)
 	for rows.Next() {
 		player := new(Player)
-		err := rows.Scan(&player.Id, &player.playerName, &player.points)
+		err := rows.Scan(&player.id, &player.PlayerName, &player.Points)
 		if err != nil {
 			return err
 		}
@@ -55,8 +56,36 @@ func PrintPlayers(ctx context.Context) (error) {
 	}
 
 	for i := 0; i < len(players); i++ {
-		fmt.Println("Id: ", players[i].Id, "playerName: ", players[i].playerName, "points: ", players[i].points)
+		fmt.Println("Id: ", players[i].id, "playerName: ", players[i].PlayerName, "points: ", players[i].Points)
 	}
 
 	return nil
+}
+
+func Balance(ctx context.Context, playerName string) ([]byte, error) {
+	db, ok := ctx.Value("db").(*sql.DB)
+	if !ok {
+		return nil, errors.New("models: could not get database connection pool from context")
+	}
+
+	rows, err := db.Query("SELECT \"playerName\", points FROM game.\"Players\" WHERE \"playerName\" = $1",
+		playerName)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		p := new(Player)
+		err := rows.Scan(&p.PlayerName, &p.Points)
+		if err != nil {
+			return nil, err
+		}
+
+		return json.Marshal(p)
+	} else {
+		return nil, errors.New("models: wrong player name")
+	}
+
 }

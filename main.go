@@ -57,17 +57,14 @@ func main() {
 	ctx := context.WithValue(context.Background(), "db", db)
 
 	http.Handle("/take", &ContextAdapter{ctx, ContextHandlerFunc(take)})
-	http.HandleFunc("/fund", fund)
-	http.HandleFunc("/announceTournament", announceTournament)
-	http.HandleFunc("/balance", balance)
-	http.HandleFunc("/resultTournament", resultTournament)
+	http.Handle("/fund", &ContextAdapter{ctx, ContextHandlerFunc(fund)})
+	http.Handle("/announceTournament", &ContextAdapter{ctx, ContextHandlerFunc(announceTournament)})
+	http.Handle("/balance", &ContextAdapter{ctx, ContextHandlerFunc(balance)})
+	http.Handle("/resultTournament", &ContextAdapter{ctx, ContextHandlerFunc(resultTournament)})
 	http.ListenAndServe(":8081", nil)
 }
 
 func take(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	models.PrintPlayers(ctx)
-	fmt.Println("Get query params: ", r.URL.Query())
-
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -93,18 +90,40 @@ func take(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fund(w http.ResponseWriter, r *http.Request) {
+func fund(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 }
 
-func announceTournament(w http.ResponseWriter, r *http.Request) {
+func announceTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 }
 
-func balance(w http.ResponseWriter, r *http.Request) {
+func balance(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
+	if len(r.URL.Query()) != 1 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	playerId := r.URL.Query().Get("playerId")
+	if len(playerId) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	response, err := models.Balance(ctx, playerId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(response)
 }
 
-func resultTournament(w http.ResponseWriter, r *http.Request) {
+func resultTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 }
