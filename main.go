@@ -95,7 +95,28 @@ func fund(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func announceTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
+	if len(r.URL.Query()) != 2 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	tournamentId := r.URL.Query().Get("tournamentId")
+	deposit := r.URL.Query().Get("deposit")
+	if len(tournamentId) == 0 || len(deposit) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := models.AnnounceTournament(ctx, tournamentId, deposit)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func balance(ctx context.Context, w http.ResponseWriter, r *http.Request) {
