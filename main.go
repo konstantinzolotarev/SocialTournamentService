@@ -82,16 +82,42 @@ func take(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := models.Take(ctx, playerId, points)
+	count, err := models.Take(ctx, playerId, points)
 	if err != nil {
 		println(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		if count != 0 {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 }
 
 func fund(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
+	if len(r.URL.Query()) != 2 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	playerId := r.URL.Query().Get("playerId")
+	points := r.URL.Query().Get("points")
+	if len(playerId) == 0 || len(points) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := models.Fund(ctx, playerId, points)
+	if err != nil {
+		println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func announceTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {

@@ -13,7 +13,7 @@ type Player struct {
 	Points float64    `json:"balance"`
 }
 
-func Take(ctx context.Context, playerName string, points string) (error) {
+func Fund(ctx context.Context, playerName string, points string) (error) {
 	db, ok := ctx.Value("db").(*sql.DB)
 	if !ok {
 		return errors.New("models: could not get database connection pool from context")
@@ -26,6 +26,29 @@ func Take(ctx context.Context, playerName string, points string) (error) {
 	}
 
 	return nil
+}
+
+func Take(ctx context.Context, playerName string, points string) (int64, error) {
+	db, ok := ctx.Value("db").(*sql.DB)
+	if !ok {
+		return 0, errors.New("models: could not get database connection pool from context")
+	}
+
+	result, err := db.Exec("UPDATE game.\"Players\" SET points = points - $1 WHERE \"playerName\" = $2 AND points - $1 > 0", points, playerName)
+	if err != nil {
+		return 0, errors.New("models: could not write Players to database")
+	}
+
+	row, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.New("models: error response count row affected")
+	}
+
+	if row == 1 {
+		return row, nil
+	} else {
+		return row, errors.New("models: wrong count row affected")
+	}
 }
 
 func Balance(ctx context.Context, playerName string) ([]byte, error) {
@@ -53,5 +76,4 @@ func Balance(ctx context.Context, playerName string) ([]byte, error) {
 	} else {
 		return nil, errors.New("models: wrong player name")
 	}
-
 }
