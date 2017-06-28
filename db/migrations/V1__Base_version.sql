@@ -87,6 +87,7 @@ SET default_with_oids = false;
 CREATE TABLE "Backers" (
     id bigint NOT NULL,
     "playerId" bigint NOT NULL,
+    "supportPlayerId" bigint NOT NULL,
     "tournamentId" bigint NOT NULL,
     share numeric(10,2) NOT NULL
 );
