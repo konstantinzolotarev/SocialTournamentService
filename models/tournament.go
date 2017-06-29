@@ -24,10 +24,10 @@ func AnnounceTournament(ctx context.Context, id string, deposit string) (error) 
 		return errors.New("models: could not get database connection pool from context")
 	}
 
-	_, err := db.Exec("INSERT INTO game.\"Tournaments\" (\"id\", \"deposit\", \"statusId\") " +
+	_, err := db.Exec("INSERT INTO game.\"Tournaments\" (\"tournamentnumber\", \"deposit\", \"statusId\") " +
 		"VALUES ($1, $2, $3);", id, deposit, announcement)
 	if err != nil {
-		println(err)
+		println(err.Error())
 		return errors.New("models: could not write Players to database")
 	}
 
@@ -66,7 +66,8 @@ func JoinTournament(ctx context.Context, values map[string][]string) (error) {
 		countPlayers += len(backerIds)
 	}
 
-	row := transaction.QueryRow("SELECT deposit / $1 FROM game.\"Tournaments\" WHERE \"id\" = $2",
+	row := transaction.QueryRow("SELECT deposit / $1 FROM game.\"Tournaments\" WHERE \"id\" = " +
+		"(SELECT id FROM game.\"Tournaments\" WHERE \"tournamentnumber\" = $2)",
 		countPlayers, tournamentIds[0])
 
 	var share float64
@@ -78,7 +79,9 @@ func JoinTournament(ctx context.Context, values map[string][]string) (error) {
 	}
 
 	_, err = transaction.Exec("INSERT INTO game.\"TournamentPlayers\" (\"playerId\", \"tournamentId\", share) " +
-		"VALUES ((SELECT id FROM game.\"Players\" WHERE \"playerName\" = $1), $2, $3)", playerIds[0], tournamentIds[0], share)
+		"VALUES ((SELECT id FROM game.\"Players\" WHERE \"playerName\" = $1), " +
+		"(SELECT id FROM game.\"Tournaments\" WHERE \"tournamentnumber\" = $2), $3)",
+		playerIds[0], tournamentIds[0], share)
 	if err != nil {
 		println(err.Error())
 		transaction.Rollback()
@@ -103,7 +106,8 @@ func JoinTournament(ctx context.Context, values map[string][]string) (error) {
 		sql := "INSERT INTO game.\"Backers\" (\"playerId\", \"supportPlayerId\", \"tournamentId\", share) VALUES "
 		for _, id := range backerIds {
 			values := " ((SELECT id FROM game.\"Players\" WHERE \"playerName\" = $1" +
-				"), (SELECT id FROM game.\"Players\" WHERE \"playerName\" = $2), $3, $4)"
+				"), (SELECT id FROM game.\"Players\" WHERE \"playerName\" = $2), " +
+				"(SELECT id FROM game.\"Tournaments\" WHERE \"tournamentnumber\" = $3), $4)"
 
 			_, err = transaction.Exec(sql + values, id, playerIds[0], tournamentIds[0],
 				strconv.FormatFloat(share, 'f', -1, 64))
@@ -114,7 +118,7 @@ func JoinTournament(ctx context.Context, values map[string][]string) (error) {
 			}
 
 			result, err := transaction.Exec("UPDATE game.\"Players\" SET points = points - $1 " +
-				"WHERE \"playerName\" = $2 AND points - $1 > 0", share, id)
+				"WHERE \"playerName\" = $2 AND points - $1 >= 0", share, id)
 			if err != nil {
 				println(err.Error())
 				transaction.Rollback()
@@ -127,10 +131,24 @@ func JoinTournament(ctx context.Context, values map[string][]string) (error) {
 				return errors.New("model: error update points on backers. Error row affected")
 			}
 		}
-
-
 	}
 
 	transaction.Commit()
 	return nil
 }
+
+func ResultTournament(ctx context.Context) ([]byte, error) {
+	//db, ok := ctx.Value("db").(*sql.DB)
+	//if !ok {
+	//	return nil, errors.New("models: could not get database connection pool from context")
+	//}
+	//
+	//transaction, err := db.Begin()
+	//if err != nil {
+	//	println(err.Error())
+	//	return nil, errors.New("models: error get transaction")
+	//}
+
+	return nil, nil
+}
+

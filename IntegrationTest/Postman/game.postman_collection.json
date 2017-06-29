@@ -1,0 +1,524 @@
+{
+	"id": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+	"name": "game",
+	"description": "",
+	"order": [],
+	"folders": [
+		{
+			"id": "2e67f44b-ea5b-a896-1665-4b93961583d7",
+			"name": "test",
+			"description": "",
+			"order": [
+				"2649dc52-03c3-a0d4-081e-88aa4b4d1dae",
+				"58521628-514e-b2ab-8a40-f3ddb3acaad5",
+				"765e81ab-7a88-766d-5ad2-c5198f401883",
+				"f6e5cc75-d0fc-392c-3200-3a6b9d1abee2",
+				"dbaee08e-008c-8be0-be1c-bb9a4a4f735d",
+				"03623b94-8ee4-6e26-7e12-5b6969a471c8",
+				"57300a40-625a-84c8-4ce4-2880df81be44",
+				"2e1e3596-e2de-8049-02a0-5eea1f7ebf1a",
+				"485a1627-8aee-ff3a-b199-e36cd3db15cd",
+				"fcf2aaa5-035f-aa23-028d-159ad41c9130",
+				"5de9bc0b-2458-495a-43d2-560b485fea1b",
+				"00b03caa-48f0-c885-e312-08b1c46ab05c",
+				"2d774757-7f56-6399-d8f5-28e493653371",
+				"44b5ccb5-e582-f88f-1e0b-c1d5fe108dc7"
+			],
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2"
+		}
+	],
+	"timestamp": 1497795604153,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "00b03caa-48f0-c885-e312-08b1c46ab05c",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/joinTournament?tournamentId={{tournamentNumber}}&playerId={{name5}}",
+			"queryParams": [
+				{
+					"key": "tournamentId",
+					"value": "{{tournamentNumber}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "playerId",
+					"value": "{{name5}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498756643677,
+			"name": "joinTournament1",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "03623b94-8ee4-6e26-7e12-5b6969a471c8",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/balance?playerId={{name1}}",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name1}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\n\ntry {\n    tests[\"balance\"] = equal(jsonData.balance, 300);\n} catch (e) { \n    tests[\"Exception JSON\"] = e===undefined;\n    console.log(e)\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498757876887,
+			"name": "balance1",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "2649dc52-03c3-a0d4-081e-88aa4b4d1dae",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/fund?playerId={{name1}}&points=300",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name1}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "points",
+					"value": "300",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": "postman.clearGlobalVariables();\npostman.setGlobalVariable(\"name1\", parseInt(Math.random() * 9999999999999).pad(10, false, 10));\npostman.setGlobalVariable(\"name2\", parseInt(Math.random() * 9999999999999).pad(10, false, 10));\npostman.setGlobalVariable(\"name3\", parseInt(Math.random() * 9999999999999).pad(10, false, 10));\npostman.setGlobalVariable(\"name4\", parseInt(Math.random() * 9999999999999).pad(10, false, 10));\npostman.setGlobalVariable(\"name5\", parseInt(Math.random() * 9999999999999).pad(10, false, 10));\npostman.setGlobalVariable(\"tournamentNumber\", parseInt(Math.random() * 9999999999999).pad(10, false, 10));\n\neval(\"equal=function(f,s){return f!==undefined && f!== null && f===s}\");",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498757751766,
+			"name": "fund1",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "2d774757-7f56-6399-d8f5-28e493653371",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/joinTournament?tournamentId={{tournamentNumber}}&playerId={{name1}}&backerId={{name2}}&backerId={{name3}}&backerId={{name4}}",
+			"queryParams": [
+				{
+					"key": "tournamentId",
+					"value": "{{tournamentNumber}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "playerId",
+					"value": "{{name1}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "backerId",
+					"value": "{{name2}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "backerId",
+					"value": "{{name3}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "backerId",
+					"value": "{{name4}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498756917278,
+			"name": "joinTournament2",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "2e1e3596-e2de-8049-02a0-5eea1f7ebf1a",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/balance?playerId={{name3}}",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name3}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\n\ntry {\n    tests[\"balance\"] = equal(jsonData.balance, 300);\n} catch (e) { \n    tests[\"Exception JSON\"] = e===undefined;\n    console.log(e)\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498757952309,
+			"name": "balance3",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "44b5ccb5-e582-f88f-1e0b-c1d5fe108dc7",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/resultTournament",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498756920473,
+			"name": "resultTournament",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "485a1627-8aee-ff3a-b199-e36cd3db15cd",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/balance?playerId={{name4}}",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name4}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\n\ntry {\n    tests[\"balance\"] = equal(jsonData.balance, 500);\n} catch (e) { \n    tests[\"Exception JSON\"] = e===undefined;\n    console.log(e)\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498757954401,
+			"name": "balance4",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "57300a40-625a-84c8-4ce4-2880df81be44",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/balance?playerId={{name2}}",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name2}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\n\ntry {\n    tests[\"balance\"] = equal(jsonData.balance, 300);\n} catch (e) { \n    tests[\"Exception JSON\"] = e===undefined;\n    console.log(e)\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498757950439,
+			"name": "balance2",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "58521628-514e-b2ab-8a40-f3ddb3acaad5",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/fund?playerId={{name2}}&points=300",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name2}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "points",
+					"value": "300",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498755715438,
+			"name": "fund2",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "5de9bc0b-2458-495a-43d2-560b485fea1b",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/announceTournament?tournamentId={{tournamentNumber}}&deposit=1000",
+			"queryParams": [
+				{
+					"key": "tournamentId",
+					"value": "{{tournamentNumber}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "deposit",
+					"value": "1000",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498756642644,
+			"name": "announceTournament",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "765e81ab-7a88-766d-5ad2-c5198f401883",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/fund?playerId={{name3}}&points=300",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name3}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "points",
+					"value": "300",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498755722478,
+			"name": "fund3",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "dbaee08e-008c-8be0-be1c-bb9a4a4f735d",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/fund?playerId={{name5}}&points=1000",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name5}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "points",
+					"value": "1000",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498756792934,
+			"name": "fund5",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "f6e5cc75-d0fc-392c-3200-3a6b9d1abee2",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/fund?playerId={{name4}}&points=500",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name4}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "points",
+					"value": "500",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498756787753,
+			"name": "fund4",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		},
+		{
+			"id": "fcf2aaa5-035f-aa23-028d-159ad41c9130",
+			"headers": "",
+			"headerData": [],
+			"url": "{{address}}/balance?playerId={{name5}}",
+			"queryParams": [
+				{
+					"key": "playerId",
+					"value": "{{name5}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\n\ntry {\n    tests[\"balance\"] = equal(jsonData.balance, 1000);\n} catch (e) { \n    tests[\"Exception JSON\"] = e===undefined;\n    console.log(e)\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1498757976188,
+			"name": "balance5",
+			"description": "",
+			"collectionId": "7fa4f512-ff28-dde4-1752-29864ad1a0f2",
+			"responses": []
+		}
+	]
+}

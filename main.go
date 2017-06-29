@@ -173,7 +173,18 @@ func balance(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func resultTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
+	response, err := models.ResultTournament(ctx)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(response)
 }
 
 func joinTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {

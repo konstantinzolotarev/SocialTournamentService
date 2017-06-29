@@ -241,6 +241,7 @@ ALTER SEQUENCE "TournamentPlayers_id_seq" OWNED BY "TournamentPlayers".id;
 
 CREATE TABLE "Tournaments" (
     id bigint NOT NULL,
+    tournamentNumber bigint NOT NULL,
     deposit numeric(10,2) NOT NULL,
     "statusId" bigint NOT NULL
 );
