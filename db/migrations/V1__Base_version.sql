@@ -203,7 +203,8 @@ CREATE TABLE "TournamentPlayers" (
     id bigint NOT NULL,
     "playerId" bigint NOT NULL,
     "tournamentId" bigint NOT NULL,
-    share numeric(10,2) NOT NULL
+    share numeric(10,2) NOT NULL,
+    unique ("playerId", "tournamentId")
 );
 
 

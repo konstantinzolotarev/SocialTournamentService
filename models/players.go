@@ -22,6 +22,7 @@ func Fund(ctx context.Context, playerName string, points string) (error) {
 	_, err := db.Exec("INSERT INTO game.\"Players\" (\"playerName\", \"points\") " +
 		"VALUES ($1, $2) ON CONFLICT (\"playerName\") DO UPDATE SET points = excluded.points;", playerName, points)
 	if err != nil {
+		println(err)
 		return errors.New("models: could not write Players to database")
 	}
 
@@ -36,11 +37,13 @@ func Take(ctx context.Context, playerName string, points string) (int64, error) 
 
 	result, err := db.Exec("UPDATE game.\"Players\" SET points = points - $1 WHERE \"playerName\" = $2 AND points - $1 > 0", points, playerName)
 	if err != nil {
+		println(err)
 		return 0, errors.New("models: could not write Players to database")
 	}
 
 	row, err := result.RowsAffected()
 	if err != nil {
+		println(err)
 		return 0, errors.New("models: error response count row affected")
 	}
 
@@ -61,6 +64,7 @@ func Balance(ctx context.Context, playerName string) ([]byte, error) {
 		playerName)
 
 	if err != nil {
+		println(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -69,6 +73,7 @@ func Balance(ctx context.Context, playerName string) ([]byte, error) {
 		p := new(Player)
 		err := rows.Scan(&p.PlayerName, &p.Points)
 		if err != nil {
+			println(err)
 			return nil, err
 		}
 

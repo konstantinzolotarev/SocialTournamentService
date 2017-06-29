@@ -61,6 +61,7 @@ func main() {
 	http.Handle("/announceTournament", &ContextAdapter{ctx, ContextHandlerFunc(announceTournament)})
 	http.Handle("/balance", &ContextAdapter{ctx, ContextHandlerFunc(balance)})
 	http.Handle("/resultTournament", &ContextAdapter{ctx, ContextHandlerFunc(resultTournament)})
+	http.Handle("/joinTournament", &ContextAdapter{ctx, ContextHandlerFunc(joinTournament)})
 	http.ListenAndServe(":8081", nil)
 }
 
@@ -173,4 +174,22 @@ func balance(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 func resultTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
+}
+
+func joinTournament(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
+	if len(r.URL.Query()) < 2 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := models.JoinTournament(ctx, r.URL.Query())
+	if err != nil {
+		println(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+	}
 }
