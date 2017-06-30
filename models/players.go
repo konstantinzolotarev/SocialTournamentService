@@ -67,7 +67,6 @@ func Balance(ctx context.Context, playerName string) ([]byte, error) {
 		println(err)
 		return nil, err
 	}
-	defer rows.Close()
 
 	if rows.Next() {
 		p := new(Player)

@@ -487,6 +487,20 @@ ALTER TABLE ONLY "TournamentPlayers"
 ALTER TABLE ONLY "Tournaments"
     ADD CONSTRAINT "Tournaments_statusId_fkey" FOREIGN KEY ("statusId") REFERENCES "Status"(id);
 
+-- View: game."PlayersInTournament"
+
+-- DROP VIEW game."PlayersInTournament";
+
+CREATE OR REPLACE VIEW game."PlayersInTournament" AS 
+ SELECT tp."playerId",
+    t."deposit",
+    t."tournamentnumber"
+   FROM game."TournamentPlayers" tp
+     JOIN game."Tournaments" t ON t.id = tp."tournamentId";
+
+ALTER TABLE game."PlayersInTournament"
+  OWNER TO "GameRole";
+
 
 -- Completed on 2017-06-25 00:54:02
 
