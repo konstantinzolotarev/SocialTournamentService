@@ -45,8 +45,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	fmt.Println(configuration.DbUser)
-
 	dbInfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
 		configuration.DbUser, configuration.DbPassword, configuration.DbName)
 	db, err := models.ConnectToDB(dbInfo)

@@ -8,7 +8,7 @@ import (
 )
 
 type Player struct {
-	id int64
+	id uint64
 	PlayerName string `json:"playerName"`
 	Points float64    `json:"balance"`
 }

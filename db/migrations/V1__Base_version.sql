@@ -241,9 +241,10 @@ ALTER SEQUENCE "TournamentPlayers_id_seq" OWNED BY "TournamentPlayers".id;
 
 CREATE TABLE "Tournaments" (
     id bigint NOT NULL,
-    tournamentNumber bigint NOT NULL,
+    "tournamentNumber" bigint NOT NULL,
     deposit numeric(10,2) NOT NULL,
-    "statusId" bigint NOT NULL
+    "statusId" bigint NOT NULL,
+    "winnerId" bigint
 );
 
 
@@ -494,13 +495,49 @@ ALTER TABLE ONLY "Tournaments"
 CREATE OR REPLACE VIEW game."PlayersInTournament" AS 
  SELECT tp."playerId",
     t."deposit",
-    t."tournamentnumber"
+    t."tournamentNumber",
+    p."playerName"
    FROM game."TournamentPlayers" tp
-     JOIN game."Tournaments" t ON t.id = tp."tournamentId";
+     JOIN game."Tournaments" t ON t.id = tp."tournamentId"
+     JOIN game."Players" p ON tp."playerId" = p.id;
 
 ALTER TABLE game."PlayersInTournament"
   OWNER TO "GameRole";
 
+-- View: game."PlayerBackers"
+
+-- DROP VIEW game."PlayerBackers";
+
+CREATE OR REPLACE VIEW game."PlayerBackers" AS 
+ SELECT b."playerId",
+    p."playerName",
+    b."tournamentId",
+    b."supportPlayerId"
+   FROM game."Backers" b
+     JOIN game."Players" p ON b."playerId" = p.id;
+
+ALTER TABLE game."PlayerBackers"
+  OWNER TO "GameRole";
+
+-- View: game."Winners"
+
+-- DROP VIEW game."Winners";
+
+CREATE OR REPLACE VIEW game."Winners" AS 
+ SELECT p."playerName",
+    tp.share,
+    tp."playerId" AS "winnerId"
+   FROM game."Players" p
+     JOIN game."TournamentPlayers" tp ON tp."playerId" = p.id
+UNION ALL
+ SELECT p."playerName",
+    b.share,
+    b."supportPlayerId" AS "winnerId"
+   FROM game."Backers" b
+     JOIN game."Players" p ON p.id = b."playerId";
+
+ALTER TABLE game."Winners"
+  OWNER TO postgres;
 
 -- Completed on 2017-06-25 00:54:02
 
